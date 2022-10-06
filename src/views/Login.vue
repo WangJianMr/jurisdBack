@@ -2,40 +2,59 @@
   <div class="login">
     <el-card class="box">
       <h3>系统登录</h3>
-      <el-form ref="form" :model="form">
-        <el-form-item>
-          <el-input v-model="form.username" placeholder="请输入用户名"></el-input>
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item prop="username">
+          <el-input
+            v-model="form.username"
+            placeholder="请输入用户名"
+          ></el-input>
+        </el-form-item>
+        <el-form-item prop="password">
+          <el-input
+            v-model="form.password"
+            placeholder="请输入密码"
+            show-password
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-input v-model="form.password" placeholder="请输入密码" show-password></el-input>
-        </el-form-item>
-        <el-form-item>
-          <div class="df">
-            <el-input v-model="form.code" placeholder="请输入验证码" class="width"></el-input>
-            <span class="w"><img :src="img" alt="" @click="imgReset"></span>
+          <div class="df" prop="code">
+            <el-input
+              v-model="form.code"
+              placeholder="请输入验证码"
+              class="width"
+            ></el-input>
+            <span class="w"><img :src="img" alt="" @click="imgReset" /></span>
           </div>
         </el-form-item>
         <el-form-item class="df">
-          <el-button type="primary" @click="loginOk">登录</el-button>
-          <el-button>重置</el-button>
+          <el-button class="button" type="primary" @click="loginOk">{{ log }}</el-button>
+          <el-button class="button" @click="rese">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-    <!-- <img :src="img" alt=""> -->
   </div>
 </template>
 
 <script>
-import { handelLoginImg, handelLogin } from "../aip/login";
+import { handelLoginImg, handelLogin } from "../api/login";
 import axios from "axios";
 export default {
   name: "login",
   data() {
     return {
+      log: "登录",
       form: {
         username: "",
         password: "",
         code: "",
+      },
+      rules: {
+        username: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+        ],
+        password: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+        ],
       },
       img: "",
     };
@@ -54,12 +73,24 @@ export default {
     imgReset() {
       this.loginImg();
     },
-   async loginOk() {
-      let str = `username=${this.form.username}&password=${this.form.password}&code=${this.form.code}`;
-     await this.$store.dispatch('handleLogin',str)
-      const token = this.$store.state.token
-      if(!token) return
-      this.$router.push('/home')
+    loginOk() {
+      this.$refs["form"].validate(async (valid) => {
+        if (valid) {
+          let str = `username=${this.form.username}&password=${this.form.password}&code=${this.form.code}`;
+          await this.$store.dispatch("login/handleLogin", str);
+          const token = this.$store.getters.TOKEN
+          console.log(token,'TOKEN');
+          if (!token) return;
+          console.log(123);
+          this.$router.push("/");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    rese() {
+      this.$refs["form"].resetFields();
     },
   },
   created() {
@@ -100,7 +131,7 @@ h3 {
 .w {
   flex: 0.4;
 }
-button {
+.button {
   width: 185px;
 }
 </style>

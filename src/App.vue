@@ -3,7 +3,13 @@
     <router-view/>
   </div>
 </template>
-
+<script>
+export default {
+  created() {
+    this.$store.commit('tabs/getTabs')
+  },
+}
+</script>
 <style lang="scss">
 body,html{
   height: 100%;

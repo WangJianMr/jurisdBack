@@ -1,38 +1,23 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import { setlotionToken, getlotionToken, setlotionuser, getlotionuser } from "../utils/auth";
-import { handelLogin } from "../aip/login";
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
+import tabs from "./modules/tabs";
+import getters from "./getters";
+import menu from './modules/menu'
+import login from "./modules/login";
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    token: getlotionToken() || '',
-    user: '',
   },
-  getters: {
-    TOKEN(state) {
-      return state.token
-    }
-  },
+  getters,
   mutations: {
-    handleLogin(state, obj) {
-      console.log(obj);
-      state.token = obj.token
-      setlotionToken(obj.token)
-    }
   },
   actions: {
-    async handleLogin({ commit }, str) {
-      try {
-        const hanLog = await handelLogin(str);
-        commit('handleLogin', hanLog)
-        return hanLog
-      } catch (error) {
-        console.log(error);
-      }
-    },
   },
   modules: {
-  }
-})
+    tabs,
+    menu,
+    login
+  },
+});

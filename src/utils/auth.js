@@ -1,21 +1,13 @@
 const TOKEN = 'token'
-const INFO = 'userInfo'
+import cookie from 'js-cookie'
 
-export const setlotionToken = (token) => {
-    localStorage.setItem(TOKEN, token)
+export const setcookieken = (token) => {
+    cookie.set(TOKEN,token)
 }
-export const getlotionToken = () => {
-    return localStorage.getItem(TOKEN || '')
-}
-
-export const setlotionuser = (user) => {
-    localStorage.setItem(INFO, JSON.stringify(user))
+export const getcookieken = () => {
+    return  cookie.get(TOKEN)
 }
 
-export const getlotionuser = () => {
-    return JSON.parse(localStorage.getItem(INFO || '{}'))
-}
 export const remove = () => {
-    localStorage.removeItem('TOKEN')
-    localStorage.removeItem('INFO')
+   cookie.remove(TOKEN)
 }
